@@ -10,6 +10,9 @@ export default class RibbonMenu {
     this.#scroll();
   }
 
+  /**
+   * Генерация разметки
+   */
   #render(){
     this.elem  = createElement(`
           <div class="ribbon">
@@ -38,6 +41,10 @@ export default class RibbonMenu {
     `));
   }
 
+  /**
+   * Обработка нажатия на ссылки категорий
+   * @param {object} item - объект ссылки, на которую нажали
+   */
   #setListenersForCategories(item){
     const event = new CustomEvent("ribbon-select", {
       detail: item.id,
@@ -47,6 +54,9 @@ export default class RibbonMenu {
     this.elem.querySelector('.ribbon__item').dispatchEvent(event);
   }
 
+  /**
+   * обработка скрола по нажатию на стрелки прокрутки
+   */
   #scroll(){
     let lefrRow = this.elem.querySelector('.ribbon__arrow_left');
     let rightRow = this.elem.querySelector('.ribbon__arrow_right');
