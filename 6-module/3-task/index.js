@@ -2,11 +2,12 @@ import createElement from '../../assets/lib/create-element.js';
 
 export default class Carousel {
   #slides;
-  elem = null;
+  elem;
 
   constructor(slides) {
     this.#slides = slides;
     this.#render();
+    this.#setArrowListeners();
   }
 
   #generateCarousel(){
@@ -25,12 +26,21 @@ export default class Carousel {
           </div>
         </div>`);
 
+      item.querySelectorAll('.carousel__button').forEach(btn => {
+        btn.addEventListener('click', () => {
+          this.#onCardClick(slide);
+        });
+      });
+
       container.appendChild(item);
       });
 
       return container;
   }
 
+  /**
+   * Формирование разметки
+   */
   #render(){
     this.elem = createElement(`
       <div class="carousel">
@@ -45,42 +55,38 @@ export default class Carousel {
 
     let containerCarousel = this.#generateCarousel();
     this.elem.appendChild(containerCarousel);
-
-    this.elem.querySelectorAll('.carousel__button').forEach(item => {
-      item.addEventListener('click', (event) => {
-        this.#onCardClick(event.target);
-      });
-    });
-
   }
 
   /**
    * Пользовательское событие нажатия на карточку
    */
-    #onCardClick(elem){
+    #onCardClick(slide){
       const event = new CustomEvent("product-add", {
-        detail: elem.parentElement.parentElement.parentElement.dataset.id,
+        detail: slide.id,
         bubbles: true
       });
 
       this.elem.querySelector('.carousel__button').dispatchEvent(event);
     }
 
-    setArrowListeners(){
-      let countOfSlides = document.querySelectorAll('.carousel__slide').length-1;
+    /**
+     * Логика прокрутки карусели
+     */
+    #setArrowListeners(){
+      let countOfSlides = this.elem.querySelectorAll('.carousel__slide').length-1;
+
+      let rightArrow = this.elem.querySelector('.carousel__arrow_right');
+      let leftArrow = this.elem.querySelector('.carousel__arrow_left');
+  
+      leftArrow.style.display = 'none';
 
       let currentPosition = 0;
       
-      let slideContainer = document.querySelector('.carousel__inner');
-
-      let widthSlide = document.querySelector('.carousel__slide').offsetWidth;
-
-      let rightArrow = document.querySelector('.carousel__arrow_right');
-      let leftArrow = document.querySelector('.carousel__arrow_left');
-
-      leftArrow.style.display = 'none';
+      let slideContainer = this.elem.querySelector('.carousel__inner');
 
       rightArrow.addEventListener('click',()=>{
+
+        let widthSlide = this.elem.querySelector('.carousel__slide').offsetWidth;
 
         if(currentPosition == 0){
           leftArrow.style.display = '';
@@ -99,6 +105,8 @@ export default class Carousel {
       });
 
       leftArrow.addEventListener('click',()=>{
+
+        let widthSlide = this.elem.querySelector('.carousel__slide').offsetWidth;
 
         if(currentPosition == countOfSlides){
           rightArrow.style.display = '';
