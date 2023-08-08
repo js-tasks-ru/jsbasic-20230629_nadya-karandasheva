@@ -19,12 +19,13 @@ export default class ProductGrid {
     this.#products = products;
     this.filters = {};
 
-    this.#render();
-    this.#initFilter();
+    this.#render(this.#products);
+    this.initFilter();
+
   }
 
-  #render(){
-    this.#products.forEach(element => {
+  #render(list){
+    list.forEach(element => {
 
       let layout = `<div class="card">
                       <div class="card__top">
@@ -43,34 +44,11 @@ export default class ProductGrid {
 
   }
 
-  #initFilter() {
-
-    const noNuts = document.querySelector('[data-no-nuts]');
-    const vegetarian = document.querySelector('[data-vegetarian-only]');
-    const maxSpiciness = document.querySelector('[data-max-spiciness]');
-    const category = document.querySelector('[data-category]');
-    
-    if (noNuts.checked) {
-      this.filters.noNuts = true
-    } else {
-      this.filters.noNuts = false;
-    }
-    if(vegetarian.checked) {
-      this.filters.vegetarian = true
-    } else {
-      this.filters.vegetarian = false;
-    }
-    if(maxSpiciness.checked) {
-      this.filters.maxSpiciness = 2
-    } else {
-      this.filters.maxSpiciness = 0;
-    }
-
-    if(category.checked) {
-      this.filters.category = 'soups'
-    } else {
-      this.filters.category = '';
-    }
+  initFilter() {
+    this.filters.noNuts = false;
+    this.filters.vegetarian = false;
+    this.filters.maxSpiciness = 0;
+    this.filters.category = '';
   }
 
   updateFilter(filters) {
