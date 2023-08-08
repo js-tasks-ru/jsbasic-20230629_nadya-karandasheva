@@ -10,6 +10,7 @@ export default class StepSlider {
     this.#render();
     this.#clickEvtListener();
     this.#dragAndDropEvtListener();
+    this.sliderVChange();
   }
 
     /**
@@ -43,7 +44,7 @@ export default class StepSlider {
       let thumb = this.elem.querySelector('.slider__thumb');
       thumb.ondragstart = () => false;
   
-      thumb.addEventListener('pointerdown', () => {
+      this.elem.addEventListener('pointerdown', () => {
   
         const pointerMove = (event) => {
   
@@ -79,9 +80,7 @@ export default class StepSlider {
           let sliderSteps = Array.from(this.elem.querySelector('.slider__steps').children);
           sliderSteps.forEach(item => item.classList.remove('slider__step-active'));
           sliderSteps[this.#value].classList.add('slider__step-active');
-          this.sliderVChange();
         };
-  
   
         document.addEventListener('pointermove', pointerMove);
   
@@ -113,18 +112,21 @@ export default class StepSlider {
       // Определение значения
       let value = Math.round(leftRelative * area);
       let valuePercents = value / area * 100;
+      this.#value = value;
 
       // Элементы слайдера
       let thumb = this.elem.querySelector('.slider__thumb');
       let progress = this.elem.querySelector('.slider__progress');
       let sliderSteps = Array.from(this.elem.querySelector('.slider__steps').children);
 
+      let sliderValue = this.elem.querySelector('.slider__value');
+      sliderValue.textContent = this.#value;
+
       // Изменения стилей
       thumb.style.left = `${valuePercents}%`;
       progress.style.width = `${valuePercents}%`;
       sliderSteps.forEach(step => step.classList.remove('slider__step-active'));
       sliderSteps[this.#value].classList.add('slider__step-active');
-      this.sliderVChange();
     })
   }
 
