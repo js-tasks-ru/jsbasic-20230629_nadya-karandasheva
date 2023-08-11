@@ -80,6 +80,7 @@ export default class StepSlider {
           let sliderSteps = Array.from(this.elem.querySelector('.slider__steps').children);
           sliderSteps.forEach(item => item.classList.remove('slider__step-active'));
           sliderSteps[this.#value].classList.add('slider__step-active');
+          this.sliderVChange();
         };
   
         document.addEventListener('pointermove', pointerMove);
