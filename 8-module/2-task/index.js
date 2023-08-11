@@ -55,17 +55,17 @@ export default class ProductGrid {
 
     this.filters = Object.assign(this.filters, filters);
 
-    if (this.filters.category || this.filters.maxSpiciness || this.filters.vegeterianOnly || this.filters.noNuts) {
+    if (filters.category || filters.maxSpiciness || filters.vegeterianOnly || filters.noNuts) {
       this.elem.querySelector('.products-grid__inner').innerHTML = '';
 
       if (this.filters.category){
-        this.#filterCategory = this.#products.filter(item => item.category === filters.category);
+        this.#filterCategory = this.#products.filter(item => item.category === this.filters.category);
       } else {
         this.#filterCategory = [];
       }
 
       if (this.filters.maxSpiciness){
-        this.#filterSpicines = this.#products.filter(item => item.spiciness > filters.maxSpiciness);
+        this.#filterSpicines = this.#products.filter(item => item.spiciness > this.filters.maxSpiciness);
       } else {
         this.#filterSpicines = [];
       }
@@ -87,7 +87,7 @@ export default class ProductGrid {
       this.#render(result);
 
     } else {
-      this.#render(this.products);
+      this.#render(this.#products);
     }
 
 
