@@ -65,7 +65,7 @@ export default class ProductGrid {
       }
 
       if (this.filters.maxSpiciness){
-        this.#filterSpicines = this.#products.filter(item => item.spiciness > this.filters.maxSpiciness);
+        this.#filterSpicines = this.#products.filter(item => item.spiciness < this.filters.maxSpiciness);
       } else {
         this.#filterSpicines = [];
       }
@@ -77,7 +77,7 @@ export default class ProductGrid {
       }
 
       if (this.filters.noNuts){
-        this.#filterNoNuts = this.#products.filter(item => item.nuts);
+        this.#filterNoNuts = this.#products.filter(item => !item.nuts);
       } else {
         this.#filterNoNuts = [];
       }
