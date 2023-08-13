@@ -9,6 +9,11 @@ export default class ProductGrid {
   #filterSpicines = [];
   #filterCategory = [];
 
+  noNuts;
+  vegetarian;
+  maxSpiciness;
+  category;
+
   elem = createElement(`<div class="products-grid">
               <div class="products-grid__inner">
               </div>
@@ -21,7 +26,6 @@ export default class ProductGrid {
 
     this.#render(this.#products);
     this.initFilter();
-
   }
 
   #render(list){
@@ -45,51 +49,60 @@ export default class ProductGrid {
   }
 
   initFilter() {
+    this.noNuts = document.querySelector('[data-no-nuts]');
+    this.vegetarian = document.querySelector('[data-vegetarian-only]');
+    this.maxSpiciness = document.querySelector('[data-max-spiciness]');
+    this.category = document.querySelector('[data-category]');
+
     this.filters.noNuts = false;
     this.filters.vegetarian = false;
-    this.filters.maxSpiciness = 0;
+    this.filters.maxSpiciness = 4;
     this.filters.category = '';
   }
 
   updateFilter(filters) {
 
     this.filters = Object.assign(this.filters, filters);
+    this.elem.querySelector('.products-grid__inner').innerHTML = '';
 
-    if (filters.category || filters.maxSpiciness || filters.vegeterianOnly || filters.noNuts) {
-      this.elem.querySelector('.products-grid__inner').innerHTML = '';
 
-      if (this.filters.category){
-        this.#filterCategory = this.#products.filter(item => item.category === this.filters.category);
-      } else {
-        this.#filterCategory = [];
-      }
+    if (filters.category  || filters.maxSpiciness <= '2'  || filters.vegeterianOnly || filters.noNuts) {
+      let checkedPoints = document.querySelectorAll('input:checked');
+      let res = [];
+      this.#products.forEach(item => {
 
-      if (this.filters.maxSpiciness){
-        this.#filterSpicines = this.#products.filter(item => item.spiciness <= this.filters.maxSpiciness);
-      } else {
-        this.#filterSpicines = [];
-      }
+        checkedPoints.forEach(checkItem => {
 
-      if (this.filters.vegeterianOnly){
-        this.#filterVegeterian = this.#products.filter(item => item.vegeterian);
-      } else {
-        this.#filterVegeterian = [];
-      }
+          if(checkItem.hasAttribute('data-no-nuts')) {
+            if(item.nuts) {
+              return;
+            }
+          } 
+          if(checkItem.hasAttribute('data-vegetarian-only')) {
+            if(!item.vegeterian) {
+              return;
+            }
+          }
+          if(checkItem.hasAttribute('data-max-spiciness')) {
+            if(!(item.spiciness <= this.filters.maxSpiciness)) {
+              return;
+            }
+          }
+          if(checkItem.hasAttribute('data-category')) {
+            if(!(item.category === this.filters.category)) {
+              return;
+            }
+          }
+          res.push(item);
+        });
 
-      if (this.filters.noNuts){
-        this.#filterNoNuts = this.#products.filter(item => !item.nuts);
-      } else {
-        this.#filterNoNuts = [];
-      }
-
-      let result = [];
-      result = result.concat(this.#filterNoNuts, this.#filterVegeterian, this.#filterSpicines, this.#filterCategory);
-      this.#render(result);
+        
+      });
+      this.#render(res);
 
     } else {
       this.#render(this.#products);
     }
-
 
   }
 }

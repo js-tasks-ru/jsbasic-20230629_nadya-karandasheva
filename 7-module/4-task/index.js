@@ -128,6 +128,7 @@ export default class StepSlider {
       progress.style.width = `${valuePercents}%`;
       sliderSteps.forEach(step => step.classList.remove('slider__step-active'));
       sliderSteps[this.#value].classList.add('slider__step-active');
+      this.sliderVChange();
     })
   }
 
