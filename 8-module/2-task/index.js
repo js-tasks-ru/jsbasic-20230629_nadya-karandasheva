@@ -61,17 +61,18 @@ export default class ProductGrid {
   }
 
   updateFilter(filters) {
+    console.log(filters);
 
     this.filters = Object.assign(this.filters, filters);
+    let checkedPoints = document.querySelectorAll('input:checked');
     this.elem.querySelector('.products-grid__inner').innerHTML = '';
 
-
-    if (filters.category  || filters.maxSpiciness <= '2'  || filters.vegeterianOnly || filters.noNuts) {
-      let checkedPoints = document.querySelectorAll('input:checked');
+    if (checkedPoints.length > 0) {
+      
       let res = [];
-      this.#products.forEach(item => {
-
-        checkedPoints.forEach(checkItem => {
+      
+      checkedPoints.forEach(checkItem => {
+        this.#products.forEach(item => {
 
           if(checkItem.hasAttribute('data-no-nuts')) {
             if(item.nuts) {
@@ -99,7 +100,6 @@ export default class ProductGrid {
         
       });
       this.#render(res);
-
     } else {
       this.#render(this.#products);
     }
