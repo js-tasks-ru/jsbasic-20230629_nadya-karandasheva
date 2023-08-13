@@ -21,19 +21,19 @@ export default class ProductGrid {
   #render(list){
     list.forEach(element => {
 
-      let layout = `<div class="card">
-                      <div class="card__top">
-                          <img src="/assets/images/products/${element.image}" class="card__image" alt="product">
-                          <span class="card__price">€${element.price.toFixed(2)}</span>
-                      </div>
-                      <div class="card__body">
-                          <div class="card__title">${element.name}</div>
-                          <button type="button" class="card__button">
-                              <img src="/assets/images/icons/plus-icon.svg" alt="icon">
-                          </button>
-                      </div>
-                    </div>`;
-      this.elem.querySelector('.products-grid__inner').appendChild(createElement(layout));
+      let layout = createElement(`<div class="card">
+                                  <div class="card__top">
+                                      <img src="/assets/images/products/${element.image}" class="card__image" alt="product">
+                                      <span class="card__price">€${element.price.toFixed(2)}</span>
+                                  </div>
+                                  <div class="card__body">
+                                      <div class="card__title">${element.name}</div>
+                                      <button type="button" class="card__button">
+                                          <img src="/assets/images/icons/plus-icon.svg" alt="icon">
+                                      </button>
+                                  </div>
+                                </div>`);
+      this.elem.querySelector('.products-grid__inner').appendChild(layout);
     })
 
   }
@@ -46,6 +46,7 @@ export default class ProductGrid {
   }
 
   updateFilter(filters) {
+    console.log(filters);
 
     this.filters = Object.assign(this.filters, filters);
     let checkedPoints = document.querySelectorAll('input:checked');
@@ -74,7 +75,7 @@ export default class ProductGrid {
           }
         }
         if(this.filters.maxSpiciness !=  4) {
-          if(item.spiciness < this.filters.maxSpiciness) {
+          if(item.spiciness <= this.filters.maxSpiciness) {
             checkesCount--;
           }else {
             return;
@@ -93,7 +94,7 @@ export default class ProductGrid {
         }
         
       });
-      
+
       this.#render(res);
     } else {
       this.#render(this.#products);
