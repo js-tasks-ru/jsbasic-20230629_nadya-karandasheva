@@ -4,16 +4,6 @@ import ProductCard from '../../6-module/2-task/index.js';
 export default class ProductGrid {
   #products;
 
-  #filterNoNuts = [];
-  #filterVegeterian = [];
-  #filterSpicines = [];
-  #filterCategory = [];
-
-  noNuts;
-  vegetarian;
-  maxSpiciness;
-  category;
-
   elem = createElement(`<div class="products-grid">
               <div class="products-grid__inner">
               </div>
@@ -49,56 +39,61 @@ export default class ProductGrid {
   }
 
   initFilter() {
-    this.noNuts = document.querySelector('[data-no-nuts]');
-    this.vegetarian = document.querySelector('[data-vegetarian-only]');
-    this.maxSpiciness = document.querySelector('[data-max-spiciness]');
-    this.category = document.querySelector('[data-category]');
-
     this.filters.noNuts = false;
-    this.filters.vegetarian = false;
+    this.filters.vegeterianOnly = false;
     this.filters.maxSpiciness = 4;
     this.filters.category = '';
   }
 
   updateFilter(filters) {
-    console.log(filters);
 
     this.filters = Object.assign(this.filters, filters);
     let checkedPoints = document.querySelectorAll('input:checked');
     this.elem.querySelector('.products-grid__inner').innerHTML = '';
 
-    if (checkedPoints.length > 0) {
+    if (filters.category || filters.vegeterianOnly || filters.maxSpiciness || filters.noNuts) {
       
       let res = [];
       
-      checkedPoints.forEach(checkItem => {
-        this.#products.forEach(item => {
+      this.#products.forEach(item => {
 
-          if(checkItem.hasAttribute('data-no-nuts')) {
-            if(item.nuts) {
-              return;
-            }
-          } 
-          if(checkItem.hasAttribute('data-vegetarian-only')) {
-            if(!item.vegeterian) {
-              return;
-            }
+        let checkesCount = checkedPoints.length;
+
+        if(this.filters.noNuts) {
+          if(!item.nuts) {
+            checkesCount--;
+          }else {
+            return;
           }
-          if(checkItem.hasAttribute('data-max-spiciness')) {
-            if(!(item.spiciness <= this.filters.maxSpiciness)) {
-              return;
-            }
+        } 
+        if(this.filters.vegeterianOnly) {
+          if(item.vegeterian) {
+            checkesCount--;
+          }else {
+            return;
           }
-          if(checkItem.hasAttribute('data-category')) {
-            if(!(item.category === this.filters.category)) {
-              return;
-            }
+        }
+        if(this.filters.maxSpiciness !=  4) {
+          if(item.spiciness < this.filters.maxSpiciness) {
+            checkesCount--;
+          }else {
+            return;
           }
+        }
+        if(this.filters.category != '') {
+          if(item.category === this.filters.category) {
+            checkesCount--;
+          }else {
+            return;
+          }
+        }
+          
+        if(checkesCount === 0){
           res.push(item);
-        });
-
+        }
         
       });
+      
       this.#render(res);
     } else {
       this.#render(this.#products);
