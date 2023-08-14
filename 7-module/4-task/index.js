@@ -80,13 +80,13 @@ export default class StepSlider {
           let sliderSteps = Array.from(this.elem.querySelector('.slider__steps').children);
           sliderSteps.forEach(item => item.classList.remove('slider__step-active'));
           sliderSteps[this.#value].classList.add('slider__step-active');
-          this.sliderVChange();
         };
   
         document.addEventListener('pointermove', pointerMove);
   
   
         document.onpointerup = () => {
+          this.sliderVChange();
           document.removeEventListener('pointermove', pointerMove);
           thumb.onpointerup = null;
         }
@@ -128,7 +128,6 @@ export default class StepSlider {
       progress.style.width = `${valuePercents}%`;
       sliderSteps.forEach(step => step.classList.remove('slider__step-active'));
       sliderSteps[this.#value].classList.add('slider__step-active');
-      this.sliderVChange();
     })
   }
 
